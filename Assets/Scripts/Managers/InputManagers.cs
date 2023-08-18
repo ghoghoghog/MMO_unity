@@ -3,7 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class InputManagers : MonoBehaviour
+public class InputManagers
 {
    public Action KeyAction = null;
 

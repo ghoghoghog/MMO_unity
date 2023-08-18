@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Resources;
 using UnityEngine;
 using UnityEngine.PlayerLoop;
 
@@ -20,6 +21,16 @@ public class Manager : MonoBehaviour
   {
     get { return s_Instance._input; }
   }
+
+  private ResourceManager _resource = new ResourceManager();
+
+  public static ResourceManager Resouce
+  {
+    get { return s_Instance._resource; }
+  }
+  
+    
+  
 
   private void Start()
   {
