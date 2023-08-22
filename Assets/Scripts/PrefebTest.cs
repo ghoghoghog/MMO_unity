@@ -4,14 +4,13 @@ using UnityEngine;
 
 public class PrefebTest : MonoBehaviour
 {
-   // public GameObject prefeb;
-    void Update()
+    GameObject prefab;
+
+    private GameObject tank;
+    void Start()
     {
-        //GameObject prefeb = Resources.Load<GameObject>("Prefebs/Tank");
-        //GameObject tank= Instantiate(prefeb);
-        Manager.Resouce.Instantiate("tank");
+        tank = Manager.Resource.Instantiate("Tank");
         
-        
-        Destroy(tank , 3f);
+        Manager.Resource.Destroy(tank, 3.0f);
     }
 }
