@@ -303,7 +303,6 @@ GameObject:
   m_Component:
   - component: {fileID: 485054629742783838}
   - component: {fileID: 9127439921587131209}
-  - component: {fileID: 3115326073586658647}
   m_Layer: 0
   m_Name: Tank
   m_TagString: Untagged
@@ -342,15 +341,3 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _speed: 1
   _yAngle: 0
---- !u!114 &3115326073586658647
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3122587518227581584}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: ef89fde270d8a0345ac37fa627502aff, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
