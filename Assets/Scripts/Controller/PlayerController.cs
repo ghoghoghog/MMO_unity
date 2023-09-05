@@ -90,5 +90,9 @@ public class PlayerController : MonoBehaviour
             _state = PlayerState.Moving;
         }
     }
-    
+
+    void OnRunEvent(string foot)
+    {
+        Debug.Log("뚜벅" + foot);
+    }
 }
