@@ -2,7 +2,8 @@
 using System.Collections.Generic;
 using UnityEngine;
 using Object = UnityEngine.Object;
-
+using UnityEngine.UI;
+using TMPro;
 public class UI_ButtonBase : MonoBehaviour
 {
     private Dictionary<Type, UnityEngine.Object[]> _objects = new Dictionary<Type, Object[]>();
@@ -15,23 +16,17 @@ public class UI_ButtonBase : MonoBehaviour
         
         for (int i = 0; i < names.Length; i++)
         {
-            if (typeof(T)==typeof(GameObject))
-            {
+            if (typeof(T) == typeof(GameObject))
                 objects[i] = Util.FindChild(gameObject, names[i], true);
-            }
-            else
-            {
+            else 
                 objects[i] = Util.FindChild<T>(gameObject, names[i], true);
-            }
-
-            if (objects[i]==null)
-            {
+            
+            if (objects[i] == null)
                 Debug.Log($"Fail to bind({names[i]})");
-            }
         }
     }
 
-    protected T Get<T>(int idx) where T : UnityEngine.Object
+    private T Get<T>(int idx) where T : UnityEngine.Object
     {
         UnityEngine.Object[] objects = null;
         if (_objects.TryGetValue(typeof(T), out objects) == false)
@@ -39,4 +34,10 @@ public class UI_ButtonBase : MonoBehaviour
 
         return objects[idx] as T;
     }
+
+    protected TextMeshProUGUI GetTextMeshProUGUI(int idx) { return Get<TextMeshProUGUI>(idx); }
+
+    protected Button GetButton(int idx) { return Get<Button>(idx); }
+    
+    protected GameObject GetGameObject(int idx) { return Get<GameObject>(idx); }
 }

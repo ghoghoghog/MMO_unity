@@ -30,8 +30,10 @@ public class UI_Button : UI_ButtonBase
         Bind<TextMeshProUGUI>(typeof(Texts));
         Bind<GameObject>(typeof(GameObjects));
         
-        Get<TextMeshProUGUI>((int)Texts.ScoreText).text = "Bind test";
+        //Get<TextMeshProUGUI>((int)Texts.ScoreText).text = "Bind test";
+        GetTextMeshProUGUI((int)Texts.ScoreText).text = "Bind Test2";
     }
+
 
     private int _score = 0;
     
