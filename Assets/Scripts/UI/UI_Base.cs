@@ -4,7 +4,7 @@ using UnityEngine;
 using Object = UnityEngine.Object;
 using UnityEngine.UI;
 using TMPro;
-public class UI_ButtonBase : MonoBehaviour
+public class UI_Base : MonoBehaviour
 {
     private Dictionary<Type, UnityEngine.Object[]> _objects = new Dictionary<Type, Object[]>();
 
@@ -40,4 +40,5 @@ public class UI_ButtonBase : MonoBehaviour
     protected Button GetButton(int idx) { return Get<Button>(idx); }
     
     protected GameObject GetGameObject(int idx) { return Get<GameObject>(idx); }
+    protected Image GetImage(int idx) { return Get<Image>(idx); }
 }

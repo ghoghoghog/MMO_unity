@@ -1,13 +1,12 @@
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using TMPro;
-using Unity.VisualScripting;
 using UnityEngine;
+using UnityEngine.EventSystems;
 using UnityEngine.UI;
 using Object = UnityEngine.Object;
 
-public class UI_Button : UI_ButtonBase
+public class UI_Button : UI_Base
 {
     enum Buttons {
         PointButton
@@ -24,17 +23,25 @@ public class UI_Button : UI_ButtonBase
         TestObject
     }
 
+    enum Images
+    {
+        ItemIcon
+    }
+
     private void Start()
     {
         Bind<Button>(typeof(Buttons));
         Bind<TextMeshProUGUI>(typeof(Texts));
         Bind<GameObject>(typeof(GameObjects));
+        Bind<Image>(typeof(Images));
         
-        //Get<TextMeshProUGUI>((int)Texts.ScoreText).text = "Bind test";
         GetTextMeshProUGUI((int)Texts.ScoreText).text = "Bind Test2";
+
+        GameObject go = GetImage((int)Images.ItemIcon).gameObject;
+        UI_EventHander ent = go.GetComponent<UI_EventHander>();
+        ent.OnDragHandler += ((PointerEventData data) => { go.transform.position = data.position; });
     }
-
-
+    
     private int _score = 0;
     
     public void OnButtonClicked()
