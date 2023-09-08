@@ -4,14 +4,20 @@ using UnityEngine;
 
 public class Define
 {
-    public enum Cameramode
+    public enum CameraMode
     {
-        Quaterview
+        QuaterView
     }
     
     public enum MouseEvent
     {
-        Press,
+        Press, 
         Click
+    }
+    
+    public enum UIEvent
+    {
+        Click,
+        Drag
     }
 }

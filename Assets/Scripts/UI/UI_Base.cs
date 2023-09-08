@@ -4,6 +4,8 @@ using UnityEngine;
 using Object = UnityEngine.Object;
 using UnityEngine.UI;
 using TMPro;
+using UnityEngine.EventSystems;
+
 public class UI_Base : MonoBehaviour
 {
     private Dictionary<Type, UnityEngine.Object[]> _objects = new Dictionary<Type, Object[]>();
@@ -41,4 +43,19 @@ public class UI_Base : MonoBehaviour
     
     protected GameObject GetGameObject(int idx) { return Get<GameObject>(idx); }
     protected Image GetImage(int idx) { return Get<Image>(idx); }
+
+    public static void AddUIEvent(GameObject go, Action<PointerEventData> action, Define.UIEvent type = Define.UIEvent.Click)
+    {
+        UI_EventHander evt = Util.GetOrAddComponent<UI_EventHander>(go);
+
+        switch (type)
+        {
+            case Define.UIEvent.Click :
+                evt.OnClickHendler += action;
+                break;
+            case Define.UIEvent.Drag :
+                evt.OnDragHandler += action;
+                break;
+        }
+    }
 }
