@@ -13,7 +13,15 @@ public class PlayerController : MonoBehaviour
     void Start()
     {
         Manager.Input.MouseAction += OnMouseClicked;
+        
+        
         UI_Button button =  Manager.UI.ShowPopupUI<UI_Button>();
+        Manager.UI.ShowPopupUI<UI_Button>();
+        Manager.UI.ShowPopupUI<UI_Button>();
+        Manager.UI.ShowPopupUI<UI_Button>();
+        Manager.UI.ShowPopupUI<UI_Button>();
+        Manager.UI.ShowPopupUI<UI_Button>();Manager.UI.ShowPopupUI<UI_Button>();
+        Manager.UI.ShowPopupUI<UI_Button>();Manager.UI.ShowPopupUI<UI_Button>();
         
         //Manager.UI.ClosePopUpUI();
 

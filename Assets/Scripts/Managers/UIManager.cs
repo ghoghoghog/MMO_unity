@@ -5,8 +5,25 @@ using UnityEngine.Rendering.VirtualTexturing;
 
 public class UIManager
 {
-    private int _order = 0;
+    private int _order = 10;
     private Stack<UI_PopUp> _popupStack = new Stack<UI_PopUp>();
+
+    public void SetCanvas(GameObject go, bool sort = true)
+    {
+        Canvas canvas = Util.GetOrAddComponent<Canvas>(go);
+        canvas.renderMode = RenderMode.ScreenSpaceOverlay;
+        canvas.overrideSorting = true;
+
+        if (sort)
+        {
+            canvas.sortingOrder = (_order);
+            _order++;
+        }
+        else
+        {
+            canvas.sortingOrder = 0;
+        }
+    }
 
     public T ShowPopupUI<T>(string prefebname = null) where T : UI_PopUp
     {
@@ -18,6 +35,13 @@ public class UIManager
         T popup = Util.GetOrAddComponent<T>(go);
         
         _popupStack.Push(popup);
+
+        GameObject root = GameObject.Find("@UI_Root");
+        if (root==null)
+        {
+            root = new GameObject { name = "@UI_Root" };
+        }
+        go.transform.SetParent(root.transform);
         return popup;
     }
     
@@ -31,6 +55,8 @@ public class UIManager
         UI_PopUp popup = _popupStack.Pop();
         Manager.Resource.Destroy(popup.gameObject);
         popup = null;
+
+        _order--;
     }
 
     public void ClosePopUpUI(UI_PopUp pop)
