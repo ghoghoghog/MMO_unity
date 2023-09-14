@@ -37,6 +37,26 @@ public class UIManager
             canvas.sortingOrder = 0;
         }
     }
+    
+    public T ShowSceneUI<T>(string prefebname = null) where T : UI_PopUp
+    {
+        if (string.IsNullOrEmpty(prefebname))
+        {
+            prefebname = typeof(T).Name;
+        }
+        GameObject go = Manager.Resource.Instantiate($"UI/Scene/{prefebname}");
+        T sceneUI = Util.GetOrAddComponent<T>(go);
+        
+        _popupStack.Push(sceneUI);
+
+        GameObject root = GameObject.Find("@UI_Root");
+        if (root==null)
+        {
+            root = new GameObject { name = "@UI_Root" };
+        }
+        go.transform.SetParent(root.transform);
+        return sceneUI;
+    }
 
     public T ShowPopupUI<T>(string prefebname = null) where T : UI_PopUp
     {
