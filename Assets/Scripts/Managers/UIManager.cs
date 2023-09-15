@@ -7,16 +7,15 @@ public class UIManager
 {
     private int _order = 10;
     private Stack<UI_PopUp> _popupStack = new Stack<UI_PopUp>();
+    private UI_Scene _sceneUI = null;
 
     public GameObject Root
     {
         get
         {
             GameObject root = GameObject.Find("@UI_Root");
-            if (root==null)
-            {
-                root = new GameObject { name = "@UI_Root" };
-            }
+            if (root == null)
+                root = new GameObject { name = "@UI_Root"};
             return root;
         }
     }
@@ -29,7 +28,7 @@ public class UIManager
 
         if (sort)
         {
-            canvas.sortingOrder = (_order);
+            canvas.sortingOrder = _order;
             _order++;
         }
         else
@@ -38,80 +37,61 @@ public class UIManager
         }
     }
     
-    public T ShowSceneUI<T>(string prefebname = null) where T : UI_PopUp
+    public T ShowSceneUI<T>(string prefabName = null) where T : UI_Scene
     {
-        if (string.IsNullOrEmpty(prefebname))
-        {
-            prefebname = typeof(T).Name;
-        }
-        GameObject go = Manager.Resource.Instantiate($"UI/Scene/{prefebname}");
-        T sceneUI = Util.GetOrAddComponent<T>(go);
-        
-        _popupStack.Push(sceneUI);
+        if (string.IsNullOrEmpty(prefabName))
+            prefabName = typeof(T).Name;
 
-        GameObject root = GameObject.Find("@UI_Root");
-        if (root==null)
-        {
-            root = new GameObject { name = "@UI_Root" };
-        }
-        go.transform.SetParent(root.transform);
+        GameObject go = Manager.Resource.Instantiate($"UI/Scene/{prefabName}");
+        T sceneUI = Util.GetOrAddComponent<T>(go);
+        _sceneUI = sceneUI;
+        
         return sceneUI;
     }
-
-    public T ShowPopupUI<T>(string prefebname = null) where T : UI_PopUp
+    
+    public T ShowPopupUI<T>(string prefabName = null) where T : UI_PopUp
     {
-        if (string.IsNullOrEmpty(prefebname))
-        {
-            prefebname = typeof(T).Name;
-        }
-        GameObject go = Manager.Resource.Instantiate($"UI/PopUp/{prefebname}");
+        if (string.IsNullOrEmpty(prefabName))
+            prefabName = typeof(T).Name;
+
+        GameObject go = Manager.Resource.Instantiate($"UI/Popup/{prefabName}");
         T popup = Util.GetOrAddComponent<T>(go);
         
         _popupStack.Push(popup);
 
-        GameObject root = GameObject.Find("@UI_Root");
-        if (root==null)
-        {
-            root = new GameObject { name = "@UI_Root" };
-        }
-        go.transform.SetParent(root.transform);
+        go.transform.SetParent(Root.transform);
+        
         return popup;
     }
-    
-    public void ClosePopUpUI()
-    {
-        if (_popupStack.Count ==0)
-        {
-            return;
-        }
 
+    public void ClosePopupUI()
+    {
+        if (_popupStack.Count == 0)
+            return;
+        
         UI_PopUp popup = _popupStack.Pop();
         Manager.Resource.Destroy(popup.gameObject);
         popup = null;
 
         _order--;
     }
-
-    public void ClosePopUpUI(UI_PopUp pop)
+    
+    public void ClosePopupUI(UI_PopUp pop)
     {
-        if (_popupStack.Count ==0)
-        {
+        if (_popupStack.Count == 0)
             return;
-        }
 
-        if (_popupStack.Peek()!=pop)
+        if (_popupStack.Peek() != pop)
         {
-            Debug.Log("Close popup Faled");
+            Debug.Log("Close Popup Failed!");
             return;
         }
-        ClosePopUpUI();
+        ClosePopupUI();
     }
 
-    public void CloseAllPopUp()
+    public void CloseAllPopupUI()
     {
-        while (_popupStack.Count>0)
-        {
-            ClosePopUpUI();
-        }
+        while (_popupStack.Count > 0)
+            ClosePopupUI();
     }
 }
