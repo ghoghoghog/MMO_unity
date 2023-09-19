@@ -36,7 +36,20 @@ public class UIManager
             canvas.sortingOrder = 0;
         }
     }
-    
+
+    public T MakeSubItem<T>(Transform parent = null, string prefabName = null) where T : UI_Base
+    {
+        if (string.IsNullOrEmpty(prefabName))
+            prefabName = typeof(T).Name;
+
+        GameObject go = Manager.Resource.Instantiate($"UI/SubItem/{prefabName}");
+        if (parent !=null)
+        {
+            go.transform.SetParent(parent);   
+        }
+        return Util.GetOrAddComponent<T>(go);
+    }
+
     public T ShowSceneUI<T>(string prefabName = null) where T : UI_Scene
     {
         if (string.IsNullOrEmpty(prefabName))
@@ -44,6 +57,7 @@ public class UIManager
 
         GameObject go = Manager.Resource.Instantiate($"UI/Scene/{prefabName}");
         T sceneUI = Util.GetOrAddComponent<T>(go);
+        go.transform.SetParent(Root.transform);
         _sceneUI = sceneUI;
         
         return sceneUI;

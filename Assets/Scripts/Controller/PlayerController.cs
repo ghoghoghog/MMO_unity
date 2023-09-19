@@ -11,8 +11,6 @@ public float _speed = 3.0f;
     void Start()
     {
         Manager.Input.MouseAction += OnMouseClicked;
-
-        Manager.UI.ShowSceneUI<UI_Inven>();
     }
 
     public enum PlayerState

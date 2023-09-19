@@ -6,13 +6,14 @@ using UnityEngine.PlayerLoop;
 
 public class UI_PopUp : UI_Base
 {
-   public virtual void Init()
-   {
-      Manager.UI.SetCanvas(gameObject, true);
-   }
-
+ 
    public virtual void ClosePopUpUI()
    {
       Manager.UI.ClosePopupUI(this);
+   }
+
+   public override void Init()
+   {
+      Manager.UI.SetCanvas(gameObject, true);
    }
 }

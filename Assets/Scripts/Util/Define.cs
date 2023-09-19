@@ -4,6 +4,14 @@ using UnityEngine;
 
 public class Define
 {
+    public enum Scene
+    {
+      Unknown,
+      Login,
+      Lobby,
+      Clear,
+      Game
+    }
     public enum CameraMode
     {
         QuaterView
@@ -20,4 +28,6 @@ public class Define
         Click,
         Drag
     }
+    
+    
 }
