@@ -4,11 +4,17 @@ using System.Collections.Generic;
 using System.Resources;
 using UnityEngine;
 using UnityEngine.PlayerLoop;
+using UnityEngine.SceneManagement;
 
 public class Manager : MonoBehaviour
 {
   private static Manager s_Instance;
-
+  private SceneManagerEX _scene = new SceneManagerEX();
+  public static SceneManagerEX Scene
+  {
+    get { return Instance._scene; }
+  }
+  
   public static Manager Instance
   {
     get 
