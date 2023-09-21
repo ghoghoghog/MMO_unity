@@ -9,10 +9,16 @@ using UnityEngine.SceneManagement;
 public class Manager : MonoBehaviour
 {
   private static Manager s_Instance;
+  private SoundManager _sound = new SoundManager();
   private SceneManagerEX _scene = new SceneManagerEX();
   public static SceneManagerEX Scene
   {
     get { return Instance._scene; }
+  }
+
+  public static SoundManager Sound
+  {
+    get { return Instance._sound; }
   }
   
   public static Manager Instance
