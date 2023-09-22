@@ -60,6 +60,7 @@ public class Manager : MonoBehaviour
       DontDestroyOnLoad(go);
       s_Instance = go.GetComponent<Manager>();
       s_Instance._sound.Init();
+      s_Instance._pool.Init();
     }
   }
 
