@@ -9,18 +9,14 @@ public class InputManagers
    public Action KeyAction = null;
    public Action<Define.MouseEvent> MouseAction = null;
 
-   public bool _pressed = false;
-
+   private bool _pressed = false;
    public void OnUpdate()
    {
       if (EventSystem.current.IsPointerOverGameObject())
-      {
          return;
-      }
-      if (Input.anyKey && KeyAction !=null)
-      {
+
+      if (Input.anyKey & KeyAction != null)
          KeyAction.Invoke();
-      }
 
       if (MouseAction != null)
       {
@@ -31,13 +27,16 @@ public class InputManagers
          }
          else
          {
-            if (_pressed)
-            {
-               MouseAction.Invoke(Define.MouseEvent.Click);
-            }
+            if(_pressed)
+               MouseAction.Invoke(Define.MouseEvent.Click); 
             _pressed = false;
          }
       }
-      
+   }
+
+   public void Clear()
+   {
+      KeyAction = null;
+      MouseAction = null;
    }
 }

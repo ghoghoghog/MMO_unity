@@ -5,7 +5,7 @@ using UnityEngine.Rendering.VirtualTexturing;
 
 public class UIManager
 {
-    private int _order = 10;
+     private int _order = 10;
     private Stack<UI_PopUp> _popupStack = new Stack<UI_PopUp>();
     private UI_Scene _sceneUI = null;
 
@@ -43,10 +43,9 @@ public class UIManager
             prefabName = typeof(T).Name;
 
         GameObject go = Manager.Resource.Instantiate($"UI/SubItem/{prefabName}");
-        if (parent !=null)
-        {
-            go.transform.SetParent(parent);   
-        }
+        if (parent != null)
+            go.transform.SetParent(parent);
+        
         return Util.GetOrAddComponent<T>(go);
     }
 
@@ -57,8 +56,9 @@ public class UIManager
 
         GameObject go = Manager.Resource.Instantiate($"UI/Scene/{prefabName}");
         T sceneUI = Util.GetOrAddComponent<T>(go);
-        go.transform.SetParent(Root.transform);
         _sceneUI = sceneUI;
+        
+        go.transform.SetParent(Root.transform);
         
         return sceneUI;
     }
@@ -107,5 +107,11 @@ public class UIManager
     {
         while (_popupStack.Count > 0)
             ClosePopupUI();
+    }
+
+    public void Clear()
+    {
+        _sceneUI = null;
+        CloseAllPopupUI();
     }
 }

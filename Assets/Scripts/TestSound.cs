@@ -5,15 +5,14 @@ using UnityEngine;
 
 public class TestSound : MonoBehaviour
 {
-    public AudioClip AudioClip;
+    private int i = 0;
+    
     private void OnTriggerEnter(Collider other)
     {
-        AudioSource audio = GetComponent<AudioSource>();
-        audio.PlayOneShot(AudioClip);
-
-        float lifetime = Mathf.Max(AudioClip.length);
-        
-        GameObject.Destroy(gameObject, lifetime );
+        i++;
+        if (i % 2 == 0)
+            Manager.Sound.Play("univ0001", Define.Sound.Bgm);
+        else
+            Manager.Sound.Play("univ0002", Define.Sound.Bgm);
     }
-    
 }
