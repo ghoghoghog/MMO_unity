@@ -32,6 +32,10 @@ public class Manager : MonoBehaviour
     
   private SoundManager _sound = new SoundManager();
   public static SoundManager Sound { get { return Instance._sound; } }
+
+  private PoolManager _pool = new PoolManager();
+  
+  public static PoolManager Pool { get { return Instance._pool; } }
     
   private void Start()
   {
@@ -65,5 +69,6 @@ public class Manager : MonoBehaviour
     Input.Clear();
     Scene.Clear();
     UI.Clear();
+    Pool.Clear();
   }
 }
