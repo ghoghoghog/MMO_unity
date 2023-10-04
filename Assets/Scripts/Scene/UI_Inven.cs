@@ -18,7 +18,7 @@ public class UI_Inven : UI_Scene
         foreach (Transform child in gridPanel.transform)
             Manager.Resource.Destroy(child.gameObject);
 
-        for (int i = 0; i < 20; i++)
+        for (int i = 0; i < 10; i++)
         {
             GameObject item = Manager.UI.MakeSubItem<UI_Inven_Item>(parent: gridPanel.transform).gameObject;
             //item.transform.SetParent(gridPanel.transform);
