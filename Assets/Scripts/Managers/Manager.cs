@@ -40,6 +40,9 @@ public class Manager : MonoBehaviour
   private DataManager _data = new DataManager();
   
   public static DataManager Data { get { return Instance._data; } }
+
+  private GameManager _game = new GameManager();
+  public static GameManager Game { get { return Instance._game; } }
   private void Start()
   {
     Init();

@@ -2,100 +2,142 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using Unity.VisualScripting;
+using Unity.VisualScripting.Antlr3.Runtime;
 using UnityEngine;
 using UnityEngine.AI;
 
-public class PlayerController : MonoBehaviour
+public class PlayerController : BaseController
 {
-public float _speed = 3.0f;
-    
-    private Vector3 _destPos;
+    private Stat _stat;
+    private int _mask = (1 <<(int)Define.Layer.Ground) | (1 << (int)Define.Layer.Monster);
+    private bool _stopSkill = false;
     void Start()
     {
-        Manager.Input.MouseAction += OnMouseClicked;
-    }
+        WorldobjectType = Define.Worldobject.Player;
+        _stat = gameObject.GetComponent<PlayerStat>();
+        Manager.Input.MouseAction += OnMouseEvent;
 
-    public enum PlayerState
-    {
-        Die,
-        Moving,
-        Idle,
+        Manager.UI.MakeWorldSpaceUI<UI_HPBar>(transform);
     }
-
-    private PlayerState _state = PlayerState.Idle;
     
-    private void Update()
-    {
-        switch (_state)
-        {
-            case PlayerState.Die :
-                UpdateDie();
-                break;
-            case PlayerState.Moving :
-                UpdateMoving();
-                break;
-            case PlayerState.Idle :
-                UpdateIdle();
-                break;
-        }
-    }
+ 
 
-   private void UpdateIdle()
+    protected override void UpdateMoving()
     {
-        Animator anim = GetComponent<Animator>();
-        anim.SetFloat("speed", 0);
-    }
-
-    private void UpdateMoving()
-    {
-        Vector3 dir = _destPos - transform.position;
-        if (dir.magnitude < 0.00001f)
+        if (_lockTarget !=null)
         {
-            _state = PlayerState.Idle;
-            return;
+            _destPos = _lockTarget.transform.position;
+            float distance = (_destPos - transform.position).magnitude;
+            if (distance <= 1.5)
+            {
+                State = Define.State.Skill;
+                return;
+            }
         }
         
-        //이동
-        float moveDist = Math.Clamp(_speed * Time.deltaTime, 0, dir.magnitude);
-        //transform.position += dir.normalized * moveDist;
-        NavMeshAgent nma = gameObject.GetOrAddComponent<NavMeshAgent>();
-        nma.Move(dir.normalized * moveDist);
+        Vector3 dir = _destPos - transform.position;
+        dir.y = 0;
+        if (dir.magnitude < 0.1f)
+        {
+            State = Define.State.Idle;
+            return;
+        }
         
         Debug.DrawRay(transform.position + Vector3.up * 0.5f , dir.normalized , Color.green);
         if (Physics.Raycast(transform.position + Vector3.up * 0.5f , dir , 1, LayerMask.GetMask("Block")))
         {
-            _state = PlayerState.Idle;
+            if(Input.GetMouseButton(0)==false)
+                State = Define.State.Idle;
             return;
         }
-        if (dir.magnitude > 0.01f)
+        
+        float moveDist = Math.Clamp(_stat.Movespeed * Time.deltaTime, 0, dir.magnitude);
+        transform.position += dir.normalized * moveDist;
+        transform.rotation = Quaternion.Slerp(transform.rotation, Quaternion.LookRotation(dir), 50 * Time.deltaTime);
+    }
+    
+    protected override void UpdateSkill()
+    {
+        if (_lockTarget!=null)
         {
-            transform.rotation = Quaternion.Slerp(transform.rotation, Quaternion.LookRotation(dir),
-                10 * Time.deltaTime);
+            Vector3 dir = _lockTarget.transform.position - transform.position;
+            Quaternion quat = Quaternion.LookRotation(dir);
+            transform.rotation = Quaternion.Lerp(transform.rotation, quat, 20 * Time.deltaTime);
         }
-        
-        //애니메이션
-        Animator anim = GetComponent<Animator>();
-        anim.SetFloat("speed", _speed);
     }
-
-    private void UpdateDie()
+    
+    
+    void OnHitEvent()
     {
-        Debug.Log("Player die!!!!!");
+        if (_lockTarget!=null)
+        {
+            Stat targetStat = _lockTarget.GetComponent<Stat>();
+            Manager.Sound.Play("Sounds/univ0001", Define.Sound.Effect);
+            targetStat.OnAttack(_stat);
+        }
+        if (_stopSkill)
+        {
+            State = Define.State.Idle;
+        }
+        else
+        {
+            State = Define.State.Moving;
+        }
     }
-
-    private void OnMouseClicked(Define.MouseEvent obj)
+    
+    private void OnMouseEvent(Define.MouseEvent evt)
     {
-        if (_state == PlayerState.Die)
+        if (State ==Define.State.Die)
             return;
-        
+
+        switch (State)
+        {
+            case Define.State.Idle:
+                OnMouseEvent_IdleRun(evt);
+                break;
+            
+            case Define.State.Moving:
+                OnMouseEvent_IdleRun(evt);
+                break;
+            case Define.State.Skill:
+                if (evt == Define.MouseEvent.PointerUp)
+                {
+                    _stopSkill = true; 
+                }
+                break;
+        }
+    }
+    private void OnMouseEvent_IdleRun(Define.MouseEvent evt)
+    {
+        if (State == Define.State.Die)
+            return;
         Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
-       // Debug.DrawRay(Camera.main.transform.position, ray.direction * 100, Color.red, 1.0f);
-
         RaycastHit hit;
-        if (Physics.Raycast(ray, out hit, 100, LayerMask.GetMask("Wall")))
+
+        bool ratcastHit = Physics.Raycast(ray, out hit, 100, _mask);
+        switch (evt)
         {
-            _destPos = hit.point;
-            _state = PlayerState.Moving;
+            case Define.MouseEvent.PointerDown :
+                if (ratcastHit)
+                {
+                     _destPos = hit.point;
+                     State = Define.State.Moving;
+                     _stopSkill = false;
+                     
+                     if (hit.collider.gameObject.layer == (int)Define.Layer.Monster)
+                         _lockTarget = hit.collider.gameObject;
+                     else
+                         _lockTarget = null;
+                }   
+                break;
+            case Define.MouseEvent.Press:
+
+                if(_lockTarget == null && ratcastHit)
+                    _destPos = hit.point;
+                break;
+            case Define.MouseEvent.PointerUp:
+                _stopSkill = true;
+                break;
         }
     }
 }
